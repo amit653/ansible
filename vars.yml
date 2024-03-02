@@ -1,0 +1,4 @@
+db_user: amitg
+db_password: postgres
+db_name: stockdb
+my_host: 127.0.0.1
