@@ -1,0 +1,31 @@
+---
+- hosts: localhost
+  gather_facts: yes
+
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: "query test using psql "
+      command: psql -t -A -d {{ db_name }} -U {{ db_user }}  -c 'SELECT count(*) from heat_treatment;'
+      register: result
+    - debug:
+        #var: result.cmd[8]
+        var: result.cmd[8],result.stdout
+
+    - name: query test using postgresql_query
+      #postgresql_query:
+      community.postgresql.postgresql_query:
+        db: "{{ db_name }}"
+        login_host: "{{ my_host }}"
+        login_user: "{{ db_user }}"
+        #login_password: "{{ my_password }}"
+        query: 
+        - SELECT version()
+        - SELECT pg_backend_pid()
+      #become: true
+      #become_user: postgres
+      register: result
+
+    - name: print
+      ansible.builtin.debug:
+        var: result
